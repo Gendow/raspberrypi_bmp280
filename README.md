@@ -21,3 +21,10 @@ run sudo pip3 install adafruit-circuitpython-bmp280
 
 
 4. pip3 install board
+
+
+
+#### Getting weather data to calibrate altitude meter
+ipi3 install request
+pip3 install josn
+threading ---> used for executing the request function. 
