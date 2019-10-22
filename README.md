@@ -22,7 +22,7 @@ run sudo pip3 install adafruit-circuitpython-bmp280
 
 4. pip3 install board
 
-img[alt=https://cdn-learn.adafruit.com/assets/assets/000/058/619/original/adafruit_products_raspi_bmp280_i2c_bb.png?1533324749]{ width: 450px; }
+img[alt=https://cdn-learn.adafruit.com/assets/assets/000/058/619/original/adafruit_products_raspi_bmp280_i2c_bb.png?1533324749] { width: 450px; }
 
 #### Assembly
 For a better understanding of the different pins, check out [this](https://learn.adafruit.com/assets/58619)
