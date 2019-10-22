@@ -24,6 +24,9 @@ run sudo pip3 install adafruit-circuitpython-bmp280
 
 img[alt=https://cdn-learn.adafruit.com/assets/assets/000/058/619/original/adafruit_products_raspi_bmp280_i2c_bb.png?1533324749] { width: 450px; }
 
+<img src="https://cdn-learn.adafruit.com/assets/assets/000/058/619/original/adafruit_products_raspi_bmp280_i2c_bb.png?1533324749" alt="drawing" width="450"/>
+
+
 #### Assembly
 For a better understanding of the different pins, check out [this](https://learn.adafruit.com/assets/58619)
 
