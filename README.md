@@ -22,7 +22,7 @@ run sudo pip3 install adafruit-circuitpython-bmp280
 
 4. pip3 install board
 
-![alt text](https://learn.adafruit.com/assets/58619)
+![nana](https://learn.adafruit.com/assets/58619)
 
 
 #### Assembly
