@@ -22,14 +22,22 @@ run sudo pip3 install adafruit-circuitpython-bmp280
 
 4. pip3 install board
 
-img[alt=https://cdn-learn.adafruit.com/assets/assets/000/058/619/original/adafruit_products_raspi_bmp280_i2c_bb.png?1533324749] { width: 450px; }
-
-<img src="https://cdn-learn.adafruit.com/assets/assets/000/058/619/original/adafruit_products_raspi_bmp280_i2c_bb.png?1533324749" alt="drawing" width="450"/>
 
 
 #### Assembly
 For a better understanding of the different pins, check out [this](https://learn.adafruit.com/assets/58619)
 
+<img src="https://cdn-learn.adafruit.com/assets/assets/000/058/619/original/adafruit_products_raspi_bmp280_i2c_bb.png?1533324749" alt="drawing" width="450"/>
+
+
+- Pi 3V3 to sensor VIN
+- Pi GND to sensor GND
+- Pi SCL to sensor SCK
+- Pi SDA to sensor SDI
+
+<img src="https://www.google.com/url?sa=i&source=images&cd=&cad=rja&uact=8&ved=2ahUKEwiGpaWHma_lAhVDK1AKHXE0ApEQjRx6BAgBEAQ&url=http%3A%2F%2Fwww.raspberrypirobotics.com%2Fraspberry-pi-gpio-access%2F&psig=AOvVaw1f3vdjlCFb9pkF0MKLAxyG&ust=1571810559547839" alt="drawing" width="450"/>
+
+The sensor pins are written on the board itself. The pins of the raspberryPi are mapped below
 Overview of the 
 
 #### Getting weather data to calibrate altitude meter
