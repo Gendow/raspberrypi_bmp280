@@ -22,7 +22,13 @@ run sudo pip3 install adafruit-circuitpython-bmp280
 
 4. pip3 install board
 
+![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
 
+
+#### Assembly
+For a better understanding of the different pins, check out [this](https://learn.adafruit.com/assets/58619)
+
+Overview of the 
 
 #### Getting weather data to calibrate altitude meter
 ipi3 install request
