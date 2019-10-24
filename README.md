@@ -1,6 +1,13 @@
 
 This repository contains the steps I took to connect the raspberryPi with a bmp280 temp, humidity and barometric sensor. 
 
+- RaspberryP 3 Model B+
+- [Adafruit bmp280](https://www.adafruit.com/product/2651) temperature and barometric pressure sensor
+- 4 GPIO [jumper wires](https://www.kiwi-electronics.nl/jumperwires-10-stuks-15-cm-femafe-female?search=gpio%20kabels&description=true) female to female
+
+It is a common practice to use a breadboard for connecting sensors to the RaspberryPi sensor prototypes. In that case the GPIO jumper wires should be female to male
+  
+
 
 1. enable I2C (https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c)
 I installed latest version of raspbian. Required libraries are already installed
@@ -12,7 +19,6 @@ run sudo raspi-config
 select interface optoins --> I2C --> enable I2C interface (yes)
 reboot system
 verify acitivation by ls /dev/i2c*, the files should be listed
-
 3. install python libraries:
 run sudo pip3 install adafruit-circuitpython-bmp280
 
@@ -40,7 +46,8 @@ For a better understanding of the different pins, check out [this](https://learn
 The sensor pins are written on the board itself. The pins of the raspberryPi are mapped below
 Overview of the 
 
-#### Getting weather data to calibrate altitude meter
+#### Calibrating altitude with data from KNMI Weatherstation
 ipi3 install request
 pip3 install josn
 threading ---> used for executing the request function. 
+
