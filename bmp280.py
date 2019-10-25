@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-
 import board
 import busio
 import adafruit_bmp280
@@ -8,13 +7,14 @@ import datetime
 import requests
 import json
 import threading
+from config import apikey
  
 i2c = busio.I2C(board.SCL, board.SDA)
 sensor = adafruit_bmp280.Adafruit_BMP280_I2C(i2c)
 
 def getSeaLevelPressure():
     threading.Timer(240, getSeaLevelPressure).start()
-    req = requests.get('http://weerlive.nl/api/json-data-10min.php?key=YOUR_API_KEY&locatie=Arnhem')
+    req = requests.get('http://weerlive.nl/api/json-data-10min.php?key=%s&locatie=Arnhem' % apikey)
 
     if req.status_code == 200:
         payload = json.loads(req.text)
