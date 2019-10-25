@@ -31,6 +31,8 @@ getSeaLevelPressure()
 while True:
     print("\nTemperature: %0.1f C" % sensor.temperature)
     print("Pressure: %0.1f hPa" % sensor.pressure)
+    mmHg = sensor.pressure * 0.75006
+    print("Pressure: %0.1f mmHg" % mmHg)
     print("Altitude: %0.2f meters" % sensor.altitude)
     print("Sea Level Pressure: %0.1f hPa " % sensor.sea_level_pressure)
     print(datetime.datetime.now())
