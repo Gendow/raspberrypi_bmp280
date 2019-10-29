@@ -65,15 +65,15 @@ The sensor pins are written on the board itself. The pins of the raspberryPi are
 Overview of the 
 
 ## Reading sensor data
----
+
 Install the python library for reading out the sensor
 
 `pip3 install adafruit-circuitpython-bmp280` 
 
 
 
-### Calibrating altitude calculations with from a weather station
-The altitude calculations provided by the sensor need to be calibrated, otherwise the altitude will be incorrect intime. These calculations are made based on the measured barometric pressure by the sensor, measured temperature and the Mean Sea Level Pressure (MSLP) at the location of the sensor. The MSLP is the local pressure adjusted for the sea level and is typically the pressure that is shown in the weather reports online. We can calibrate the sensor by looking up de MSLP at our location in the weather and setting the calibration variable to that pressure:
+### Calibrating altitude calculations using a weather station
+The altitude calculations provided by the sensor need to be calibrated, otherwise the altitude will be incorrect in time. These calculations are made based on the measured barometric pressure by the sensor, measured temperature and the Mean Sea Level Pressure (MSLP) at the location of the sensor. The MSLP is the local pressure adjusted for the sea level and is typically the pressure that is shown in the weather reports online. We can calibrate the sensor by looking up de MSLP at our location in the weather and setting the calibration variable to that pressure:
 
 `sensor.sea_level_pressure = 1012.2` 
 
@@ -84,7 +84,27 @@ pip3 install request`
 pip3 install json
 ``` 
 
-ipi3 install request
-pip3 install josn
+Now we can define a simple function to get the weather data from the weather stations. We only need to provide two parameters to the get request: `key` and `locatie`. The key is your api key and the locatie is a city in The Netherlands. It will automatically fetch the weather data from the closest weather station to that city. The if statement checks whather the weerlive server is online and if our request is valid. Any errors will be printed to the console. 
+
+```
+    req = requests.get('http://weerlive.nl/api/json-data-10min.php?key=YOUR_APIY_KEY&locatie=Amsterdam')
+
+    if req.status_code == 200:
+        payload = json.loads(req.text)
+        sensor.sea_level_pressure = float(payload["liveweer"][0]["luchtd"])
+    else:
+        print("error from weather API: %" % req.status-code)
+```
+
+If the request is valid and the server is online, we will receive an response as a `json`. If we parse this json we will get a result which looks something like this
+
+``` 
+
+```
+
+
+
+This works like
+
 threading ---> used for executing the request function. 
 
