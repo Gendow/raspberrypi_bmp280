@@ -28,21 +28,25 @@ If the overview only shows zero's, then your raspberrypi did not detect the sens
 
 1. enable I2C (https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c)
 I installed latest version of raspbian. Required libraries are already installed
-sudo apt-get install -y python-smbus
-sudo apt-get install -y i2c-tools
+`sudo apt-get install -y python-smbus`
+`sudo apt-get install -y i2c-tools`
+
+Check if the I2C is enabled: 
+`ls /dev/i2c` 
+
+`/dev/i2c-0`
 
 2. Installing Kernel Support (with Raspi-Config) / enable the i2c controlers
 
-select interface optoins --> I2C --> enable I2C interface (yes)
-reboot system
-verify acitivation by ls /dev/i2c*, the files should be listed
-3. install python libraries:
+
+select interface optoins --> I2C --> enable I2C interface (yes) reboot system, verify acitivation by ls /dev/i2c*, the files should be listed
+
+install python libraries:
+
 run sudo pip3 install adafruit-circuitpython-bmp280
 
-3. Connect BMP280 according to layout
-
-
-4. pip3 install board
+ Connect BMP280 according to layout
+ pip3 install board
 
 #### Assembly
 The sensor has the following pins: 	
@@ -60,10 +64,26 @@ For a better understanding of the different pins, check out [this](https://learn
 The sensor pins are written on the board itself. The pins of the raspberryPi are mapped below
 Overview of the 
 
-#### Reading sensor data
----------
+## Reading sensor data
+---
+Install the python library for reading out the sensor
 
-#### Calibrating altitude with data from KNMI Weatherstation
+`pip3 install adafruit-circuitpython-bmp280` 
+
+
+
+### Calibrating altitude calculations with from a weather station
+The altitude calculations provided by the sensor need to be calibrated, otherwise the altitude will be incorrect intime. These calculations are made based on the measured barometric pressure by the sensor, measured temperature and the Mean Sea Level Pressure (MSLP) at the location of the sensor. The MSLP is the local pressure adjusted for the sea level and is typically the pressure that is shown in the weather reports online. We can calibrate the sensor by looking up de MSLP at our location in the weather and setting the calibration variable to that pressure:
+
+`sensor.sea_level_pressure = 1012.2` 
+
+As simple as that. However, the pressure is not constant. It changes over time just like the weather does. We don't want to manually calibrate the sensor every now and then, we can do that programmaticaly by connecting to an API of the nearest weather station. In The Netherlands the Dutch Meteological Instute provides real time weather data via  [weerlive](http://weerlive.nl). The service requires an API key which you can get with a free subcriptions. To get a request we need to install the following package
+
+```
+pip3 install request` 
+pip3 install json
+``` 
+
 ipi3 install request
 pip3 install josn
 threading ---> used for executing the request function. 
