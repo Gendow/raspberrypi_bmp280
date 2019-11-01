@@ -100,8 +100,25 @@ If the request is valid and the server is online, we will receive an response as
 
 
 ##### Dealing with API request limits
+The weerlive API has a [request limit](http://weerlive.nl/delen.php) of 300 requests per day. We want to update the MSLP value as often as possible to keep the sensor calibrated, but not more then 300 times as the API will refuse our requests. We will create a [thread](https://realpython.com/intro-to-python-threading/#what-is-a-thread) function: a function that runs parellel to the readouts of the sensor data, extended with a timer. The timer will ensure the function is being executed (i.e. weather station data is requested), but with a pause. Adding the thread function to the code above results in this:
 
-This works like
+```
+def getSeaLevelPressure():
+    threading.Timer(240, getSeaLevelPressure).start()
+    req = requests.get('http://weerlive.nl/api/json-data-10min.php?key=%s&locatie=Arnhem' % apikey)
+
+    if req.status_code == 200:
+        payload = json.loads(req.text)
+        sensor.sea_level_pressure = float(payload["liveweer"][0]["luchtd"])
+    else:
+        print("error from weather API: %" % req.status-code)
+  
+getSeaLevelPressure()
+```
+
+
+
+
 
 threading ---> used for executing the request function. 
 
