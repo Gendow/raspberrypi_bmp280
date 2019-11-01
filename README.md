@@ -84,7 +84,7 @@ pip3 install request`
 pip3 install json
 ``` 
 
-Now we can define a simple function to get the weather data from the weather stations. We only need to provide two parameters to the get request: `key` and `locatie`. The key is your api key and the locatie is a city in The Netherlands. It will automatically fetch the weather data from the closest weather station to that city. The if statement checks whather the weerlive server is online and if our request is valid. Any errors will be printed to the console. 
+Now we can define a simple function to get the weather data from the weather stations. We only need to provide two parameters to the get request: `key` and `locatie`. The `key` is your api key and the `locatie` is a city in The Netherlands. It will automatically fetch the weather data from the closest weather station. The if statement checks whather the weerlive server is online and if our request is valid. Any errors will be printed to the console. 
 
 ```
     req = requests.get('http://weerlive.nl/api/json-data-10min.php?key=YOUR_APIY_KEY&locatie=Amsterdam')
@@ -96,13 +96,10 @@ Now we can define a simple function to get the weather data from the weather sta
         print("error from weather API: %" % req.status-code)
 ```
 
-If the request is valid and the server is online, we will receive an response as a `json`. If we parse this json we will get a result which looks something like this
-
-``` 
-
-```
+If the request is valid and the server is online, we will receive an response as a `json`, like this [example](http://weerlive.nl/api/json-data-10min.php?key=demo&locatie=Amsterdam). Parse the json using `json.loads` and extract the values of interest. In our case this is the value under the `luchtd` (=luchtdruk = pressure) attribute. In the final step we assign this value to the `sensor.sea_level_pressure` to calibrate the sensor. 
 
 
+##### Dealing with API request limits
 
 This works like
 
