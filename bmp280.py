@@ -8,7 +8,7 @@ import requests
 import json
 import threading
 from config import apikey
- 
+
 i2c = busio.I2C(board.SCL, board.SDA)
 sensor = adafruit_bmp280.Adafruit_BMP280_I2C(i2c)
 
