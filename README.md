@@ -48,10 +48,9 @@ run sudo pip3 install adafruit-circuitpython-bmp280
  Connect BMP280 according to layout
  pip3 install board
 
-## Assembly
-This section describes the assembly and connection of the Pi to the sensor.
+## Wiring
+This section describes the wiring of the sensor to the RaspberryPi.
 
-![assembly](https://learn.adafruit.com/assets/58619)
 The sensor has the following pins: 	
 For a better understanding of the different pins, check out [this](https://learn.adafruit.com/assets/58619)
 
@@ -67,7 +66,7 @@ Overview of the
 
 [![pinout][1]][2]
 
-[1]: https://github.com/codehub-rony/raspberrypi_bmp280/blob/master/images/pi_pinouts.PNG
+[1]: https://github.com/codehub-rony/raspberrypi_bmp280/blob/master/images/pi_pinouts-2.png
 [2]: https://pinout.xyz/
 
 
@@ -88,8 +87,8 @@ The altitude calculations provided by the sensor need to be calibrated, otherwis
 As simple as that. However, the pressure is not constant. It changes over time just like the weather does. We don't want to manually calibrate the sensor every now and then, we can do that programmaticaly by connecting to an API of the nearest weather station. In The Netherlands the Dutch Meteological Instute provides real time weather data via  [weerlive](http://weerlive.nl). The service requires an API key which you can get with a free subcriptions. To get a request we need to install the following package
 
 ```
-pip3 install request` 
-pip3 install json
+pipenv install request 
+pipenv install json
 ``` 
 
 Now we can define a simple function to get the weather data from the weather stations. We only need to provide two parameters to the get request: `key` and `locatie`. The `key` is your api key and the `locatie` is a city in The Netherlands. It will automatically fetch the weather data from the closest weather station. The if statement checks whather the weerlive server is online and if our request is valid. Any errors will be printed to the console. 
