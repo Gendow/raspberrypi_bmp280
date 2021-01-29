@@ -67,7 +67,7 @@ Overview of the
 [![lala][1]][2]
 
 [1]: https://github.com/codehub-rony/raspberrypi_bmp280/blob/master/images/pi_pinouts.PNG
-[2][newtab]: https://pinout.xyz/[newtab]
+[2]: https://pinout.xyz/[newtab]
 
 
 
