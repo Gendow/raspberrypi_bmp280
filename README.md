@@ -1,7 +1,7 @@
+### 
+This repository contains the steps I took to connect the bpm280 temperature and barometric pressure sensor to the raspberryPi.  
 
-This repository contains the steps I took to connect the raspberryPi with a bmp280 temperature and barometric sensor. 
-
-- RaspberryP 3 Model B+ with latest Raspbian isntalle d
+- RaspberryP 3 Model B+ with latest Raspbian isntalled
 - [Adafruit bmp280](https://www.adafruit.com/product/2651) temperature and barometric pressure sensor
 - 4 GPIO [jumper wires](https://www.kiwi-electronics.nl/jumperwires-10-stuks-15-cm-femafe-female?search=gpio%20kabels&description=true) female to female
 
@@ -48,7 +48,10 @@ run sudo pip3 install adafruit-circuitpython-bmp280
  Connect BMP280 according to layout
  pip3 install board
 
-#### Assembly
+## Assembly
+This section describes the assembly and connection of the Pi to the sensor.
+
+![assembly](https://learn.adafruit.com/assets/58619)
 The sensor has the following pins: 	
 For a better understanding of the different pins, check out [this](https://learn.adafruit.com/assets/58619)
 
@@ -59,15 +62,13 @@ For a better understanding of the different pins, check out [this](https://learn
 - Raspberrypi SCL to sensor SCK
 - Raspberrypi SDA to sensor SDI
 
-<img src="http://www.raspberrypirobotics.com/wp-content/uploads/2018/01/Raspberry-GPIO.jpg" width="450"/>
-
 The sensor pins are written on the board itself. The pins of the raspberryPi are mapped below
 Overview of the 
 
-[![lala][1]][2]
+[![pinout][1]][2]
 
 [1]: https://github.com/codehub-rony/raspberrypi_bmp280/blob/master/images/pi_pinouts.PNG
-[2]: https://pinout.xyz/[newtab]
+[2]: https://pinout.xyz/
 
 
 
