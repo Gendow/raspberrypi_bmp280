@@ -66,7 +66,7 @@ Overview of the
 
 [![pinout][1]][2]
 
-[1]: https://github.com/codehub-rony/raspberrypi_bmp280/blob/master/images/pi_pinouts-2.png
+[1]: https://github.com/codehub-rony/raspberrypi_bmp280/blob/master/images/pi_pinouts.png
 [2]: https://pinout.xyz/
 
 
