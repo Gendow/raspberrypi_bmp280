@@ -64,6 +64,8 @@ For a better understanding of the different pins, check out [this](https://learn
 The sensor pins are written on the board itself. The pins of the raspberryPi are mapped below
 Overview of the 
 
+![lalala](https://github.com/codehub-rony/raspberrypi_bmp280/blob/master/images/pi_pinouts.PNG)
+
 ## Reading sensor data
 
 Install the python library for reading out the sensor
