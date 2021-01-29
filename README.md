@@ -64,10 +64,10 @@ For a better understanding of the different pins, check out [this](https://learn
 The sensor pins are written on the board itself. The pins of the raspberryPi are mapped below
 Overview of the 
 
-[![lala][1]][2][newtab]
+[![lala][1]][2]
 
 [1]: https://github.com/codehub-rony/raspberrypi_bmp280/blob/master/images/pi_pinouts.PNG
-[2]: https://pinout.xyz/
+[2][newtab]: https://pinout.xyz/[newtab]
 
 
 
