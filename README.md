@@ -6,7 +6,7 @@ Connect a BMP280 temperature and barometric pressure sensor to your RaspberryPi.
 - [Wiring to RaspberryPi](#wiring)
 - [Detect sensor](#detect-sensor)
 - [Reading sensor data with Python](#reading-sensor-data-with-python)
-- [Calibrating altitude calculations using weather data](calibrating-altitude-calculations-using-real-time-weather-data)
+- [Calibrating altitude calculations using weather data](#calibrating-altitude-calculations-using-real-time-weather-data)
 
 If you have any questions, comments or suggestions, please make sure to contact me. 
 
@@ -130,5 +130,5 @@ If we put all these pieces of code together and run the code, we will see the fo
 
 <img src="https://github.com/codehub-rony/raspberrypi_bmp280/blob/master/images/measurement_example.PNG">
 
-We can see the `temperature`, `pressure` in `hPa` and `altitude` measurements. However, this time, the altitude has been calculated using the actual `sea level pressure`. We have also calculated the pressure in `mmHg`. 
+We can see the `temperature`, `pressure` in `hPa` and `altitude` measurements. However, this time, the altitude has been calculated using the actual `sea level pressure`. We have also calculated the pressure in `mmHg`. In this particular case the MSLP and the measured pressure are more or less the same. But I have had days in which there is a significant difference between both.
 
