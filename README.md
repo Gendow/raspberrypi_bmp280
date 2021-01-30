@@ -10,8 +10,11 @@ It is a common practice to use a breadboard for connecting sensors to the Raspbe
 
 #### Set up 
 -----------
+Make sure the I2C bus is enabled on your RaspberryPi. This is a standard used for connectign multiple sensors or devices to the RaspberryPi. If you haven't configured I2C, then make sure to go through this [walk through](https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c)
+
 enable I2C
 
+Before st
 `run sudo raspi-config` 
 
 
@@ -19,7 +22,8 @@ Check if the sensor has been detected
 
 `sudo i2cdetect -y 1` 
 
-The output should look something like this:
+The output should similar to the one below
+[]
 
 `put overview of output here`
 
@@ -41,6 +45,7 @@ Check if the I2C is enabled:
 
 select interface optoins --> I2C --> enable I2C interface (yes) reboot system, verify acitivation by ls /dev/i2c*, the files should be listed
 
+
 install python libraries:
 
 run sudo pip3 install adafruit-circuitpython-bmp280
@@ -49,24 +54,22 @@ run sudo pip3 install adafruit-circuitpython-bmp280
  pip3 install board
 
 ## Wiring
-This section describes the wiring of the sensor to the RaspberryPi.
+The sensor can be wired with the I2C standard for communications and data transfer. This means that we need to connect the sensor to the I2C (SCL and SDA) pins of the RaspberryPi, the power supply and the ground. 
 
-The sensor has the following pins: 	
-For a better understanding of the different pins, check out [this](https://learn.adafruit.com/assets/58619)
+The image below shows the [wiring](https://learn.adafruit.com/adafruit-bmp280-barometric-pressure-plus-temperature-sensor-breakout/circuitpython-test) of the sensor. For a more in depth explanation of the pins, visit the official [pinout documentation](https://learn.adafruit.com/adafruit-bmp280-barometric-pressure-plus-temperature-sensor-breakout/pinouts).
+
+- RaspberryPi 3V3 to VIN on sensor
+- RaspberryPi GND to GND on sensor
+- RaspberryPi SCL to SCK on sensor
+- RaspberryPi SDA to SDI on sensor
 
 <img src="https://cdn-learn.adafruit.com/assets/assets/000/058/619/original/adafruit_products_raspi_bmp280_i2c_bb.png?1533324749" alt="drawing" width="450"/>
 
-- Raspberrypi 3V3 to sensor VIN
-- Raspberrypi GND to sensor GND
-- Raspberrypi SCL to sensor SCK
-- Raspberrypi SDA to sensor SDI
+The pins on the sensor have been labelled on the board. The pins on the RaspberryPi can be found using a pinout chart as shown below. See this [interactive resource](https://pinout.xyz/) for an in depth description of the pins. 
 
-The sensor pins are written on the board itself. The pins of the raspberryPi are mapped below
-Overview of the 
+<img src="https://www.raspberrypi.org/documentation/usage/gpio/images/GPIO-Pinout-Diagram-2.png">
 
-[![pinout][1]][2]
 
-[1]: https://github.com/codehub-rony/raspberrypi_bmp280/blob/master/images/pi_pinouts.png
 [2]: https://pinout.xyz/
 
 
