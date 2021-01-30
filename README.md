@@ -85,7 +85,7 @@ while True:
 The above code will print the temperature, pressure, altitude and current time every 10 seconds. Take a moment to enjoy the satisfaction and excitment this small project is currently bringing you. 
 
 
-<img src="https://media.giphy.com/media/xUPJPnaANa5SFyTlTi/giphy.gif">
+<img src="https://giphy.com/gifs/xUPJPnaANa5SFyTlTi/html5f">
 
 
 #### Calibrating altitude calculations using weather data
