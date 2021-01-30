@@ -30,47 +30,47 @@ The image below shows how to do the [wiring](https://learn.adafruit.com/adafruit
 - RaspberryPi SCL to SCK on sensor (orange)
 - RaspberryPi SDA to SDI on sensor (blue)
 
-The pins on the sensor have been labelled on the board itself. The pins on the RaspberryPi can be found using the `pinout` command in the console. 
+The pins on the sensor are labelled on the board. The pins on the RaspberryPi can be found using the `pinout` command in the terminal. 
 
 <img src="https://github.com/codehub-rony/raspberrypi_bmp280/blob/master/images/pinout.PNG">
 
-I highly recommened reading the official [pinout documentation](https://learn.adafruit.com/adafruit-bmp280-barometric-pressure-plus-temperature-sensor-breakout/pinouts) of the sensor to get an understand of the pin's purpose. 
+I highly recommened reading the official [pinout documentation](https://learn.adafruit.com/adafruit-bmp280-barometric-pressure-plus-temperature-sensor-breakout/pinouts) of the sensor to understand what these pins are acutally for.
 
 ### Detect sensor
-Once we have wired the sensor, we need to make sure the RaspberryPi has actually detected it. Otherwise our Python code will throw an error. To check if the device has been detected, we can use:
+Once we have wired the sensor, we need to make sure the RaspberryPi has actually detected it. Otherwise our Python code will throw an error. To check if the device has been detected type the following command in the terminal:
 
 `sudo i2cdetect -y 1` 
 
-This will return a matrix showing all devices that have been detected on the I2C pins. The possibility to connect multiple devices on the same pins is one of the reasons why I2C standard is popular. The RaspberryPi will automatically assign each device to a different port number. This allows us to communicate with different devices at the same time. 
+This will return a matrix showing all devices that have been detected on the I2C bus. Yes, you read it correctly. I2C provides us with the possibility to connect multiple devices on the same pins. This is unique to the I2C standard. The RaspberryPi will automatically assign each device to a different port number. This allows us to communicate with different devices at the same time. 
 
 <img src="https://github.com/codehub-rony/raspberrypi_bmp280/blob/master/images/i2c_detect.PNG">
 
-We can see that our sensor has been detected on port 77. Continue to the next section of this tutorial if you can see your sensor on any of the ports.
+We can see that our sensor has been detected on port 77. Continue to the next section of this tutorial if your sensor has been assigned to any of the ports.
 
 If your sensor hasn't been detected; double check the wiring. Also, make sure I2C has been enabled and configured properly. Adafruit has a nice [tutorial](https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2) on how to set up the I2C on your RasperryPi. 
 
 ### Reading sensor data with Python
-Make sure you have installed [Adafruit CircuitPython](https://learn.adafruit.com/welcome-to-circuitpython/installing-circuitpython). This is a python library that adds hardware support to Python. It allows us to work the hardware in an easy way. 
+Make sure you have installed [Adafruit CircuitPython](https://learn.adafruit.com/welcome-to-circuitpython/installing-circuitpython). This is a python library that adds hardware support to Python. It allows us to work microcontrolers in an easy way. 
 
 Assuming CircuitPython is working, we can now move on to installing the specific library for the BMP280 sensor
 
 `pip3 install adafruit-circuitpython-bmp280`
 
-From here one it is super easy to get the first measurements results. First, we will create our bmp280 object to enable access to the measurements:
+From here on it is super easy to read the measurements of the sensor. First, we will create our bmp280 object to access the sensor:
 ``` 
 # Create sensor object using the I2C port
 i2c = busio.I2C(board.SCL, board.SDA)
 sensor = adafruit_bmp280.Adafruit_BMP280_I2C(i2c)
 ``` 
 
-The altitude is calculating using the measured pressure and the sea level pressure at your location. In order to get a correct altitude, we will have to set the `sea_level_pressure` property of the sensor. You can find the sea level pressure in local weather reports. 
+Now, there is some fakenews going on in this sensor. It isn't actually measuring the altitude. You can't measure altitude with hardware. Instead, the altitude is calculated using the pressure measurements and the sea level pressure. The sea level pressure needs to be set manually in order to get a correct altitude. You can find the sea level pressure in local weather reports. 
 
 ```
 sensor.sea_level_pressure = 991.35 
 ```
-This method is oke for now. However, the weather is changing constantly. This change will also affect the sea level pressure which in turn.... Yes, will also affect the accuracy of your altitude calculations. So, make sure to update the `sea_level_pressure` property on a regular base. Or, automate this task. More on this in the next section.
+This method is oke for now. However, the weather is changing constantly. This change will also affect the pressure at sea level, which in turn.... Yes, will also affect the accuracy of your altitude calculations. So, make sure to update the `sea_level_pressure` property on a regular base. Or - if you are lazy like me - automate this task. More on this in the next section.
 
-Now that we have configured our sensor and the altitude calculations, we can start reading out the sensor. The people at Adafruit are doing an amazing work at simplifying things for us. This is the code to get your first measurements printed to the console:
+Now that we have configured our sensor and the altitude calculations, we can start reading out the sensor. The people at Adafruit are doing an amazing job at simplifying things for us. This is the code to get your first measurements printed to the console:
 
 ```
 while True:
@@ -82,8 +82,10 @@ while True:
 
 ```
 
-The above code will print the temperature, pressure, altitude and current time every 10 seconds. Enjoy!
+The above code will print the temperature, pressure, altitude and current time every 10 seconds. Take a moment to enjoy the satisfaction and excitment this small project is currently bringing you. 
 
+
+<img src="https://media.giphy.com/media/xUPJPnaANa5SFyTlTi/giphy.gif">
 
 
 #### Calibrating altitude calculations using weather data

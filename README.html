@@ -1055,60 +1055,70 @@ body .markdown-body
 .codehilite .vi{color:teal}
 .codehilite .il{color:#009999}
 .codehilite .gc{color:#999;background-color:#EAF2F5}
-</style><title>README</title></head><body><article class="markdown-body"><h3 id="_1"><a class="headerlink" href="#_1" title="Permanent link"></a></h3>
-<p>This repository contains the steps I took to connect the bpm280 temperature and barometric pressure sensor to the raspberryPi.  </p>
+</style><title>README</title></head><body><article class="markdown-body"><h3 id="measure-barometric-pressure-temperature-and-altitude-with-a-raspberrypi">Measure barometric pressure, temperature and altitude with a RaspberryPi<a class="headerlink" href="#measure-barometric-pressure-temperature-and-altitude-with-a-raspberrypi" title="Permanent link"></a></h3>
+<p>Connect a BMP280 temperature and barometric pressure sensor to your RaspberryPi. This tutorial will go through the necessary steps to wire up the sensor and program your RaspberryPi to show meaningfull measurements from the BMP280 sensor.</p>
 <ul>
-<li>RaspberryP 3 Model B+ with latest Raspbian isntalled</li>
+<li><a href="#components">Components</a></li>
+<li><a href="#wiring">Wiring to RaspberryPi</a></li>
+<li><a href="#detect-sensor">Detect sensor</a></li>
+<li><a href="#reading-sensor-data-with-python">Reading sensor data with Python</a></li>
+<li><a href="#calibrating-altitude-calculations-using-weather-data">Calibrating altitude calculations using weather data</a></li>
+</ul>
+<p>If you have any questions, comments or suggestions, please make sure to contact me. </p>
+<h3 id="components">Components<a class="headerlink" href="#components" title="Permanent link"></a></h3>
+<ul>
+<li>RaspberryP 3 Model B+ with latest Raspbian installed</li>
 <li><a href="https://www.adafruit.com/product/2651">Adafruit bmp280</a> temperature and barometric pressure sensor</li>
 <li>4 GPIO <a href="https://www.kiwi-electronics.nl/jumperwires-10-stuks-15-cm-femafe-female?search=gpio%20kabels&amp;description=true">jumper wires</a> female to female</li>
 </ul>
-<p>It is a common practice to use a breadboard for connecting sensors to the RaspberryPi. In that case the GPIO jumper wires should be female to male</p>
-<h4 id="set-up">Set up<a class="headerlink" href="#set-up" title="Permanent link"></a></h4>
-<hr />
-<p>Make sure the I2C bus is enabled on your RaspberryPi. This is a standard used for connectign multiple sensors or devices to the RaspberryPi. If you haven&rsquo;t configured I2C, then make sure to go through this <a href="https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c">walk through</a></p>
-<p>enable I2C</p>
-<p>Before st
-<code>run sudo raspi-config</code> </p>
-<p>Check if the sensor has been detected</p>
-<p><code>sudo i2cdetect -y 1</code> </p>
-<p>The output should similar to the one below
-[]</p>
-<p><code>put overview of output here</code></p>
-<p>If the overview only shows zero&rsquo;s, then your raspberrypi did not detect the sensor. Check whether jumper wires have been installed correctly. </p>
-<ol>
-<li>enable I2C (<a href="https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c">https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c</a>)
-I installed latest version of raspbian. Required libraries are already installed
-<code>sudo apt-get install -y python-smbus</code>
-<code>sudo apt-get install -y i2c-tools</code></li>
-</ol>
-<p>Check if the I2C is enabled: 
-<code>ls /dev/i2c</code> </p>
-<p><code>/dev/i2c-0</code></p>
-<ol start="2">
-<li>Installing Kernel Support (with Raspi-Config) / enable the i2c controlers</li>
-</ol>
-<p>select interface optoins &ndash;&gt; I2C &ndash;&gt; enable I2C interface (yes) reboot system, verify acitivation by ls /dev/i2c*, the files should be listed</p>
-<p>install python libraries:</p>
-<p>run sudo pip3 install adafruit-circuitpython-bmp280</p>
-<p>Connect BMP280 according to layout
- pip3 install board</p>
-<h2 id="wiring">Wiring<a class="headerlink" href="#wiring" title="Permanent link"></a></h2>
-<p>The sensor can be wired with the I2C standard for communications and data transfer. This means that we need to connect the sensor to the I2C (SCL and SDA) pins of the RaspberryPi, the power supply and the ground. </p>
-<p>The image below shows the <a href="https://learn.adafruit.com/adafruit-bmp280-barometric-pressure-plus-temperature-sensor-breakout/circuitpython-test">wiring</a> of the sensor. For a more in depth explanation of the pins, visit the official <a href="https://learn.adafruit.com/adafruit-bmp280-barometric-pressure-plus-temperature-sensor-breakout/pinouts">pinout documentation</a>.</p>
-<ul>
-<li>RaspberryPi 3V3 to VIN on sensor</li>
-<li>RaspberryPi GND to GND on sensor</li>
-<li>RaspberryPi SCL to SCK on sensor</li>
-<li>RaspberryPi SDA to SDI on sensor</li>
-</ul>
+<p>It is a common practice to use a breadboard for connecting sensors to the RaspberryPi. In my set up I connected the sensor directly to the RaspberryPi. If you intend to use a breaboard, you will need female to male jumper wires. </p>
+<h3 id="wiring">Wiring<a class="headerlink" href="#wiring" title="Permanent link"></a></h3>
+<p>The sensor can be wired to the RaspberryPi both with I2C and SPI. In this tutorial we will use the I2C standard. Therefore we need to connect the power supply (3V3), ground (GND) and the I2C (SCL &amp; SDA) pins between both devices.</p>
+<p>The image below shows how to do the <a href="https://learn.adafruit.com/adafruit-bmp280-barometric-pressure-plus-temperature-sensor-breakout/circuitpython-test">wiring</a> of the sensor.</p>
 <p><img src="https://cdn-learn.adafruit.com/assets/assets/000/058/619/original/adafruit_products_raspi_bmp280_i2c_bb.png?1533324749" alt="drawing" width="450"/></p>
-<p>The pins on the sensor have been labelled on the board. The pins on the RaspberryPi can be found using a pinout chart as shown below. See this <a href="https://pinout.xyz/">interactive resource</a> for an in depth description of the pins. </p>
-<p><img src="https://www.raspberrypi.org/documentation/usage/gpio/images/GPIO-Pinout-Diagram-2.png"></p>
-<h2 id="reading-sensor-data">Reading sensor data<a class="headerlink" href="#reading-sensor-data" title="Permanent link"></a></h2>
-<p>Install the python library for reading out the sensor</p>
-<p><code>pip3 install adafruit-circuitpython-bmp280</code> </p>
-<h3 id="calibrating-altitude-calculations-using-a-weather-station">Calibrating altitude calculations using a weather station<a class="headerlink" href="#calibrating-altitude-calculations-using-a-weather-station" title="Permanent link"></a></h3>
-<p>The altitude calculations provided by the sensor need to be calibrated, otherwise the altitude will be incorrect in time. These calculations are made based on the measured barometric pressure by the sensor, measured temperature and the Mean Sea Level Pressure (MSLP) at the location of the sensor. The MSLP is the local pressure adjusted for the sea level and is typically the pressure that is shown in the weather reports online. We can calibrate the sensor by looking up de MSLP at our location in the weather and setting the calibration variable to that pressure:</p>
+<ul>
+<li>RaspberryPi 3V3 to VIN on sensor (red)</li>
+<li>RaspberryPi GND to GND on sensor (black)</li>
+<li>RaspberryPi SCL to SCK on sensor (orange)</li>
+<li>RaspberryPi SDA to SDI on sensor (blue)</li>
+</ul>
+<p>The pins on the sensor are labelled on the board. The pins on the RaspberryPi can be found using the <code>pinout</code> command in the terminal. </p>
+<p><img src="https://github.com/codehub-rony/raspberrypi_bmp280/blob/master/images/pinout.PNG"></p>
+<p>I highly recommened reading the official <a href="https://learn.adafruit.com/adafruit-bmp280-barometric-pressure-plus-temperature-sensor-breakout/pinouts">pinout documentation</a> of the sensor to understand what these pins are acutally for.</p>
+<h3 id="detect-sensor">Detect sensor<a class="headerlink" href="#detect-sensor" title="Permanent link"></a></h3>
+<p>Once we have wired the sensor, we need to make sure the RaspberryPi has actually detected it. Otherwise our Python code will throw an error. To check if the device has been detected type the following command in the terminal:</p>
+<p><code>sudo i2cdetect -y 1</code> </p>
+<p>This will return a matrix showing all devices that have been detected on the I2C bus. Yes, you read it correctly. I2C provides us with the possibility to connect multiple devices on the same pins. This is unique to the I2C standard. The RaspberryPi will automatically assign each device to a different port number. This allows us to communicate with different devices at the same time. </p>
+<p><img src="https://github.com/codehub-rony/raspberrypi_bmp280/blob/master/images/i2c_detect.PNG"></p>
+<p>We can see that our sensor has been detected on port 77. Continue to the next section of this tutorial if your sensor has been assigned to any of the ports.</p>
+<p>If your sensor hasn&rsquo;t been detected; double check the wiring. Also, make sure I2C has been enabled and configured properly. Adafruit has a nice <a href="https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2">tutorial</a> on how to set up the I2C on your RasperryPi. </p>
+<h3 id="reading-sensor-data-with-python">Reading sensor data with Python<a class="headerlink" href="#reading-sensor-data-with-python" title="Permanent link"></a></h3>
+<p>Make sure you have installed <a href="https://learn.adafruit.com/welcome-to-circuitpython/installing-circuitpython">Adafruit CircuitPython</a>. This is a python library that adds hardware support to Python. It allows us to work microcontrolers in an easy way. </p>
+<p>Assuming CircuitPython is working, we can now move on to installing the specific library for the BMP280 sensor</p>
+<p><code>pip3 install adafruit-circuitpython-bmp280</code></p>
+<p>From here on it is super easy to read the measurements of the sensor. First, we will create our bmp280 object to access the sensor:
+<div class="codehilite"><pre># Create sensor object using the I2C port
+i2c = busio.I2C(board.SCL, board.SDA)
+sensor = adafruit_bmp280.Adafruit_BMP280_I2C(i2c)
+</pre></div></p>
+<p>Now, there is some fakenews going on in this sensor. It isn&rsquo;t actually measuring the altitude. You can&rsquo;t measure altitude with hardware. Instead, the altitude is calculated using the pressure measurements and the sea level pressure. The sea level pressure needs to be set manually in order to get a correct altitude. You can find the sea level pressure in local weather reports. </p>
+<p><div class="codehilite"><pre>sensor.sea_level_pressure = 991.35 
+</pre></div>
+This method is oke for now. However, the weather is changing constantly. This change will also affect the pressure at sea level, which in turn.... Yes, will also affect the accuracy of your altitude calculations. So, make sure to update the <code>sea_level_pressure</code> property on a regular base. Or - if you are lazy like me - automate this task. More on this in the next section.</p>
+<p>Now that we have configured our sensor and the altitude calculations, we can start reading out the sensor. The people at Adafruit are doing an amazing job at simplifying things for us. This is the code to get your first measurements printed to the console:</p>
+<div class="codehilite"><pre>while True:
+    print(&quot;\nTemperature: %0.1f C&quot; % sensor.temperature)
+    print(&quot;Pressure: %0.1f hPa&quot; % sensor.pressure)
+    print(&quot;Altitude: %0.2f meters&quot; % sensor.altitude)
+    print(datetime.datetime.now())
+    time.sleep(10)
+</pre></div>
+
+<p>The above code will print the temperature, pressure, altitude and current time every 10 seconds. Take a moment to enjoy the satisfaction and excitment this small project is currently bringing you. </p>
+<p><img src="https://media.giphy.com/media/xUPJPnaANa5SFyTlTi/giphy.gif"></p>
+<h4 id="calibrating-altitude-calculations-using-weather-data">Calibrating altitude calculations using weather data<a class="headerlink" href="#calibrating-altitude-calculations-using-weather-data" title="Permanent link"></a></h4>
+<p>The sensor does not actually measure the altitude. You can&rsquo;t measure altitude using barometric pressure. The altitude is based on a calculation in which the measured 
+The altitude calculations provided by the sensor need to be calibrated, otherwise the altitude will be incorrect in time. These calculations are made based on the measured barometric pressure by the sensor, measured temperature and the Mean Sea Level Pressure (MSLP) at the location of the sensor. The MSLP is the local pressure adjusted for the sea level and is typically the pressure that is shown in the weather reports online. We can calibrate the sensor by looking up de MSLP at our location in the weather and setting the calibration variable to that pressure:</p>
 <p><code>sensor.sea_level_pressure = 1012.2</code> </p>
 <p>As simple as that. However, the pressure is not constant. It changes over time just like the weather does. We don&rsquo;t want to manually calibrate the sensor every now and then, we can do that programmaticaly by connecting to an API of the nearest weather station. In The Netherlands the Dutch Meteological Instute provides real time weather data via  <a href="http://weerlive.nl">weerlive</a>. The service requires an API key which you can get with a free subcriptions. To get a request we need to install the following package</p>
 <div class="codehilite"><pre>pipenv install request 
