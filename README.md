@@ -19,7 +19,7 @@ If you have any questions, comments or suggestions, please make sure to contact 
 It is a common practice to use a breadboard for connecting sensors to the RaspberryPi. In my set up I connected the sensor directly to the RaspberryPi. If you intend to use a breaboard, you will need female to male jumper wires. 
 
 ### Wiring
-The sensor can be wired to the RaspberryPi both with I2C and SPI. In this tutorial we will use the I2C standard. Therefore we need to connect the power supply (3V3), ground (GND) and the I2C (SCL & SDA) pins between both devices.
+The sensor can be wired to the RaspberryPi both with I2C and SPI. In this tutorial we will use the I2C standard. Therefore we need to connect the power supply (3V3), ground (GND) and the I2C (SCL & SDA) pins between both devices. I highly recommened reading the official [pinout documentation](https://learn.adafruit.com/adafruit-bmp280-barometric-pressure-plus-temperature-sensor-breakout/pinouts) of the sensor to understand what these pins are acutally for.
 
 The image below shows how to do the [wiring](https://learn.adafruit.com/adafruit-bmp280-barometric-pressure-plus-temperature-sensor-breakout/circuitpython-test) of the sensor.
 
@@ -34,7 +34,7 @@ The pins on the sensor are labelled on the board. The pins on the RaspberryPi ca
 
 <img src="https://github.com/codehub-rony/raspberrypi_bmp280/blob/master/images/pinout.PNG">
 
-I highly recommened reading the official [pinout documentation](https://learn.adafruit.com/adafruit-bmp280-barometric-pressure-plus-temperature-sensor-breakout/pinouts) of the sensor to understand what these pins are acutally for.
+Another more readable way to find the correct pins, is by visiting the interactive pinout on [https://pinout.xyz/](https://pinout.xyz/)
 
 ### Detect sensor
 Once we have wired the sensor, we need to make sure the RaspberryPi has actually detected it. Otherwise our Python code will throw an error. To check if the device has been detected type the following command in the terminal:
