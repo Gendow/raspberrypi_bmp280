@@ -6,7 +6,7 @@ Connect a BMP280 temperature and barometric pressure sensor to your RaspberryPi.
 - [Wiring to RaspberryPi](#wiring)
 - [Detect sensor](#detect-sensor)
 - [Reading sensor data with Python](#reading-sensor-data-with-python)
-- [Calibrating altitude calculations using weather data](#calibrating-altitude-calculations-using-weather-data)
+- [Calibrating altitude calculations using weather data](calibrating-altitude-calculations-using-real-time-weather-data)
 
 If you have any questions, comments or suggestions, please make sure to contact me. 
 
@@ -63,7 +63,7 @@ i2c = busio.I2C(board.SCL, board.SDA)
 sensor = adafruit_bmp280.Adafruit_BMP280_I2C(i2c)
 ``` 
 
-Now, there is some fakenews going on in this sensor. It isn't actually measuring the altitude. You can't measure altitude with hardware. Instead, the altitude is calculated using the pressure measurements and the sea level pressure. The sea level pressure needs to be set manually in order to get a correct altitude. You can find the sea level pressure in local weather reports. 
+Now, there is some fakenews going on in this sensor. It isn't actually measuring the altitude. You can't measure altitude with hardware. Instead, the altitude is calculated using the pressure measurements and the Mean Sea Level Pressure (MSRLP). The MSLP is the local pressure adjusted for the sea level and is typically the pressure that is shown in the weather reports online. The sensor requires setting the MSLP manually. So find a weather report of your location and set the property of the sensor:
 
 ```
 sensor.sea_level_pressure = 991.35 
@@ -85,23 +85,17 @@ while True:
 The above code will print the temperature, pressure, altitude and current time every 10 seconds. Take a moment to enjoy the satisfaction and excitment this small project is currently bringing you. 
 
 
-<img src="https://media.giphy.com/media/xUPJPnaANa5SFyTlTi/giphy.gif">
+#### Calibrating altitude calculations using real time weather data
+Weather changes, so does the pressure. That's why people are interested in measuring it. As time passes and the pressure changes, your `sensor.sea_level_pressure` will be incorrect. We can update it manually as mentioned before, or we can use actual weather data from weather stations.
 
-
-#### Calibrating altitude calculations using weather data
-The sensor does not actually measure the altitude. You can't measure altitude using barometric pressure. The altitude is based on a calculation in which the measured 
-The altitude calculations provided by the sensor need to be calibrated, otherwise the altitude will be incorrect in time. These calculations are made based on the measured barometric pressure by the sensor, measured temperature and the Mean Sea Level Pressure (MSLP) at the location of the sensor. The MSLP is the local pressure adjusted for the sea level and is typically the pressure that is shown in the weather reports online. We can calibrate the sensor by looking up de MSLP at our location in the weather and setting the calibration variable to that pressure:
-
-`sensor.sea_level_pressure = 1012.2` 
-
-As simple as that. However, the pressure is not constant. It changes over time just like the weather does. We don't want to manually calibrate the sensor every now and then, we can do that programmaticaly by connecting to an API of the nearest weather station. In The Netherlands the Dutch Meteological Instute provides real time weather data via  [weerlive](http://weerlive.nl). The service requires an API key which you can get with a free subcriptions. To get a request we need to install the following package
+In The Netherlands the Dutch Meteological Instute provides real time weather data via [weerlive](http://weerlive.nl). The service requires an API key which you can get with a free subcriptions. To get a request we need to install the `request` package for doing a `get` request, and the `json` package to parse the result.
 
 ```
-pipenv install request 
-pipenv install json
+pip3 install request 
+pip3 install json
 ``` 
 
-Now we can define a simple function to get the weather data from the weather stations. We only need to provide two parameters to the get request: `key` and `locatie`. The `key` is your api key and the `locatie` is a city in The Netherlands. It will automatically fetch the weather data from the closest weather station. The if statement checks whather the weerlive server is online and if our request is valid. Any errors will be printed to the console. 
+Now we can define a simple function to get the weather data from the weather stations. We only need to provide two parameters to the request: `key` and `locatie`. The `key` is your api key and the `locatie` is a city in The Netherlands. It will automatically fetch the weather data from the closest weather station. The if statement checks whether the weerlive server is online and if our request is valid. Any errors will be printed to the console. 
 
 ```
     req = requests.get('http://weerlive.nl/api/json-data-10min.php?key=YOUR_APIY_KEY&locatie=Amsterdam')
@@ -117,7 +111,8 @@ If the request is valid and the server is online, we will receive an response as
 
 
 ##### Dealing with API request limits
-The weerlive API has a [request limit](http://weerlive.nl/delen.php) of 300 requests per day. We want to update the MSLP value as often as possible to keep the sensor calibrated, but not more then 300 times as the API will refuse our requests. We will create a [thread](https://realpython.com/intro-to-python-threading/#what-is-a-thread) function: a function that runs parellel to the readouts of the sensor data, extended with a timer. The timer will ensure the function is being executed (i.e. weather station data is requested), but with a pause. Adding the thread function to the code above results in this:
+
+The weerlive API has a [request limit](http://weerlive.nl/delen.php) of 300 requests per day. We want to update the MSLP value as often as possible to keep the sensor calibrated, but not more than the API limit. We will create a [thread](https://realpython.com/intro-to-python-threading/#what-is-a-thread) function: a function that runs parellel to the readouts of the sensor data, extended with a timer. The timer will ensure the function is being executed (i.e. weather station data is requested), but with a pause. Adding the thread function to the code above results in:
 
 ```
 def getSeaLevelPressure():
@@ -132,10 +127,4 @@ def getSeaLevelPressure():
   
 getSeaLevelPressure()
 ```
-
-
-
-
-
-threading ---> used for executing the request function. 
 

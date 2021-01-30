@@ -1062,7 +1062,7 @@ body .markdown-body
 <li><a href="#wiring">Wiring to RaspberryPi</a></li>
 <li><a href="#detect-sensor">Detect sensor</a></li>
 <li><a href="#reading-sensor-data-with-python">Reading sensor data with Python</a></li>
-<li><a href="#calibrating-altitude-calculations-using-weather-data">Calibrating altitude calculations using weather data</a></li>
+<li><a href="/C:/Rony/dev/raspberrypi_bmp280/calibrating-altitude-calculations-using-real-time-weather-data">Calibrating altitude calculations using weather data</a></li>
 </ul>
 <p>If you have any questions, comments or suggestions, please make sure to contact me. </p>
 <h3 id="components">Components<a class="headerlink" href="#components" title="Permanent link"></a></h3>
@@ -1101,7 +1101,7 @@ body .markdown-body
 i2c = busio.I2C(board.SCL, board.SDA)
 sensor = adafruit_bmp280.Adafruit_BMP280_I2C(i2c)
 </pre></div></p>
-<p>Now, there is some fakenews going on in this sensor. It isn&rsquo;t actually measuring the altitude. You can&rsquo;t measure altitude with hardware. Instead, the altitude is calculated using the pressure measurements and the sea level pressure. The sea level pressure needs to be set manually in order to get a correct altitude. You can find the sea level pressure in local weather reports. </p>
+<p>Now, there is some fakenews going on in this sensor. It isn&rsquo;t actually measuring the altitude. You can&rsquo;t measure altitude with hardware. Instead, the altitude is calculated using the pressure measurements and the Mean Sea Level Pressure (MSRLP). The MSLP is the local pressure adjusted for the sea level and is typically the pressure that is shown in the weather reports online. The sensor requires setting the MSLP manually. So find a weather report of your location and set the property of the sensor:</p>
 <p><div class="codehilite"><pre>sensor.sea_level_pressure = 991.35 
 </pre></div>
 This method is oke for now. However, the weather is changing constantly. This change will also affect the pressure at sea level, which in turn.... Yes, will also affect the accuracy of your altitude calculations. So, make sure to update the <code>sea_level_pressure</code> property on a regular base. Or - if you are lazy like me - automate this task. More on this in the next section.</p>
@@ -1115,17 +1115,14 @@ This method is oke for now. However, the weather is changing constantly. This ch
 </pre></div>
 
 <p>The above code will print the temperature, pressure, altitude and current time every 10 seconds. Take a moment to enjoy the satisfaction and excitment this small project is currently bringing you. </p>
-<p><img src="https://media.giphy.com/media/xUPJPnaANa5SFyTlTi/giphy.gif"></p>
-<h4 id="calibrating-altitude-calculations-using-weather-data">Calibrating altitude calculations using weather data<a class="headerlink" href="#calibrating-altitude-calculations-using-weather-data" title="Permanent link"></a></h4>
-<p>The sensor does not actually measure the altitude. You can&rsquo;t measure altitude using barometric pressure. The altitude is based on a calculation in which the measured 
-The altitude calculations provided by the sensor need to be calibrated, otherwise the altitude will be incorrect in time. These calculations are made based on the measured barometric pressure by the sensor, measured temperature and the Mean Sea Level Pressure (MSLP) at the location of the sensor. The MSLP is the local pressure adjusted for the sea level and is typically the pressure that is shown in the weather reports online. We can calibrate the sensor by looking up de MSLP at our location in the weather and setting the calibration variable to that pressure:</p>
-<p><code>sensor.sea_level_pressure = 1012.2</code> </p>
-<p>As simple as that. However, the pressure is not constant. It changes over time just like the weather does. We don&rsquo;t want to manually calibrate the sensor every now and then, we can do that programmaticaly by connecting to an API of the nearest weather station. In The Netherlands the Dutch Meteological Instute provides real time weather data via  <a href="http://weerlive.nl">weerlive</a>. The service requires an API key which you can get with a free subcriptions. To get a request we need to install the following package</p>
-<div class="codehilite"><pre>pipenv install request 
-pipenv install json
+<h4 id="calibrating-altitude-calculations-using-real-time-weather-data">Calibrating altitude calculations using real time weather data<a class="headerlink" href="#calibrating-altitude-calculations-using-real-time-weather-data" title="Permanent link"></a></h4>
+<p>Weather changes, so does the pressure. That&rsquo;s why people are interested in measuring it. As time passes and the pressure changes, your <code>sensor.sea_level_pressure</code> will be incorrect. We can update it manually as mentioned before, or we can use actual weather data from weather stations.</p>
+<p>In The Netherlands the Dutch Meteological Instute provides real time weather data via <a href="http://weerlive.nl">weerlive</a>. The service requires an API key which you can get with a free subcriptions. To get a request we need to install the <code>request</code> package for doing a <code>get</code> request, and the <code>json</code> package to parse the result.</p>
+<div class="codehilite"><pre>pip3 install request 
+pip3 install json
 </pre></div>
 
-<p>Now we can define a simple function to get the weather data from the weather stations. We only need to provide two parameters to the get request: <code>key</code> and <code>locatie</code>. The <code>key</code> is your api key and the <code>locatie</code> is a city in The Netherlands. It will automatically fetch the weather data from the closest weather station. The if statement checks whather the weerlive server is online and if our request is valid. Any errors will be printed to the console. </p>
+<p>Now we can define a simple function to get the weather data from the weather stations. We only need to provide two parameters to the request: <code>key</code> and <code>locatie</code>. The <code>key</code> is your api key and the <code>locatie</code> is a city in The Netherlands. It will automatically fetch the weather data from the closest weather station. The if statement checks whether the weerlive server is online and if our request is valid. Any errors will be printed to the console. </p>
 <div class="codehilite"><pre>    req = requests.get(&#39;http://weerlive.nl/api/json-data-10min.php?key=YOUR_APIY_KEY&amp;locatie=Amsterdam&#39;)
 
     if req.status_code == 200:
@@ -1137,7 +1134,7 @@ pipenv install json
 
 <p>If the request is valid and the server is online, we will receive an response as a <code>json</code>, like this <a href="http://weerlive.nl/api/json-data-10min.php?key=demo&amp;locatie=Amsterdam">example</a>. Parse the json using <code>json.loads</code> and extract the values of interest. In our case this is the value under the <code>luchtd</code> (=luchtdruk = pressure) attribute. In the final step we assign this value to the <code>sensor.sea_level_pressure</code> to calibrate the sensor. </p>
 <h5 id="dealing-with-api-request-limits">Dealing with API request limits<a class="headerlink" href="#dealing-with-api-request-limits" title="Permanent link"></a></h5>
-<p>The weerlive API has a <a href="http://weerlive.nl/delen.php">request limit</a> of 300 requests per day. We want to update the MSLP value as often as possible to keep the sensor calibrated, but not more then 300 times as the API will refuse our requests. We will create a <a href="https://realpython.com/intro-to-python-threading/#what-is-a-thread">thread</a> function: a function that runs parellel to the readouts of the sensor data, extended with a timer. The timer will ensure the function is being executed (i.e. weather station data is requested), but with a pause. Adding the thread function to the code above results in this:</p>
+<p>The weerlive API has a <a href="http://weerlive.nl/delen.php">request limit</a> of 300 requests per day. We want to update the MSLP value as often as possible to keep the sensor calibrated, but not more than the API limit. We will create a <a href="https://realpython.com/intro-to-python-threading/#what-is-a-thread">thread</a> function: a function that runs parellel to the readouts of the sensor data, extended with a timer. The timer will ensure the function is being executed (i.e. weather station data is requested), but with a pause. Adding the thread function to the code above results in:</p>
 <div class="codehilite"><pre>def getSeaLevelPressure():
     threading.Timer(240, getSeaLevelPressure).start()
     req = requests.get(&#39;http://weerlive.nl/api/json-data-10min.php?key=%s&amp;locatie=Arnhem&#39; % apikey)
@@ -1149,6 +1146,4 @@ pipenv install json
         print(&quot;error from weather API: %&quot; % req.status-code)
 
 getSeaLevelPressure()
-</pre></div>
-
-<p>threading &mdash;&gt; used for executing the request function. </p></article></body></html>
+</pre></div></article></body></html>
