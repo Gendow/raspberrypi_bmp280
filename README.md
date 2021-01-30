@@ -65,12 +65,19 @@ The image below shows the [wiring](https://learn.adafruit.com/adafruit-bmp280-ba
 
 <img src="https://cdn-learn.adafruit.com/assets/assets/000/058/619/original/adafruit_products_raspi_bmp280_i2c_bb.png?1533324749" alt="drawing" width="450"/>
 
-The pins on the sensor have been labelled on the board. The pins on the RaspberryPi can be found using a pinout chart as shown below. See this [interactive resource](https://pinout.xyz/) for an in depth description of the pins. 
+The pins on the sensor have been labelled on the board. The pins on the RaspberryPi can be found using a pinout chart as shown below. See this [interactive resource](https://pinout.xyz/) for an extensive guide. 
 
 <img src="https://www.raspberrypi.org/documentation/usage/gpio/images/GPIO-Pinout-Diagram-2.png">
 
 
-[2]: https://pinout.xyz/
+## Checking the sensor
+If you have wired the sensor, you can check whether the RaspberryPi has detected it. 
+
+`sudo i2cdetect -y 1` 
+
+This will give an overview of all the sensors that have been detected. If you have wired the sensor succesfully, you will see an output similar to the one below
+
+<img src="https://github.com/codehub-rony/raspberrypi_bmp280/blob/master/images/i2c_detect.PNG">
 
 
 
