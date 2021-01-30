@@ -84,7 +84,6 @@ while True:
 
 The above code will print the temperature, pressure, altitude and current time every 10 seconds. Take a moment to enjoy the satisfaction and excitment this small project is currently bringing you. 
 
-
 #### Calibrating altitude calculations using real time weather data
 Weather changes, so does the pressure. That's why people are interested in measuring it. As time passes and the pressure changes, your `sensor.sea_level_pressure` will be incorrect. We can update it manually as mentioned before, or we can use actual weather data from weather stations.
 
