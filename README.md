@@ -32,7 +32,7 @@ The image below shows the [wiring](https://learn.adafruit.com/adafruit-bmp280-ba
 
 The pins on the sensor have been labelled on the board itself. The pins on the RaspberryPi can be found using a pinout chart as shown below. See this [interactive resource](https://pinout.xyz/) for an extensive guide. 
 
-<img src="https://www.raspberrypi.org/documentation/usage/gpio/images/GPIO-Pinout-Diagram-2.png">
+![pi_pinout](https://www.raspberrypi.org/documentation/usage/gpio/images/GPIO-Pinout-Diagram-2.png)
 
 
 ### Detect sensor
