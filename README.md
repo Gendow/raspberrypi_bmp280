@@ -84,7 +84,7 @@ while True:
 
 The above code will print the temperature, pressure, altitude and current time every 10 seconds. Take a moment to enjoy the satisfaction and excitment this small project is currently bringing you. 
 
-#### Calibrating altitude calculations using real time weather data
+### Calibrating altitude calculations using real time weather data
 Weather changes, so does the pressure. That's why people are interested in measuring it. As time passes and the pressure changes, your `sensor.sea_level_pressure` will be incorrect. We can update it manually as mentioned before, or we can use actual weather data from weather stations.
 
 In The Netherlands the Dutch Meteological Instute provides real time weather data via [weerlive](http://weerlive.nl). The service requires an API key which you can get with a free subcriptions. To get a request we need to install the `request` package for doing a `get` request, and the `json` package to parse the result.
@@ -110,8 +110,7 @@ If the request is valid and the server is online, we will receive an response as
 
 
 ##### Dealing with API request limits
-
-The weerlive API has a [request limit](http://weerlive.nl/delen.php) of 300 requests per day. We want to update the MSLP value as often as possible to keep the sensor calibrated, but not more than the API limit. We will create a [thread](https://realpython.com/intro-to-python-threading/#what-is-a-thread) function: a function that runs parellel to the readouts of the sensor data, extended with a timer. The timer will ensure the function is being executed (i.e. weather station data is requested), but with a pause. Adding the thread function to the code above results in:
+The weerlive API has a [request limit](http://weerlive.nl/delen.php) of 300 requests per day. We want to update the MSLP value as often as possible to keep the sensor calibrated, but not more than the API limit. We will create a [thread function](https://realpython.com/intro-to-python-threading/#what-is-a-thread): a function that runs parellel to the readouts of the sensor data, extended with a timer. The timer will ensure the function is being executed (i.e. weather station data is requested), but with a delay/pause. Adding the thread function to the code above results in:
 
 ```
 def getSeaLevelPressure():
@@ -126,4 +125,10 @@ def getSeaLevelPressure():
   
 getSeaLevelPressure()
 ```
+
+If we put all these pieces of code together and run the code, we will see the following result in the terminal:
+
+<img src="https://github.com/codehub-rony/raspberrypi_bmp280/blob/master/images/measurement_example.PNG">
+
+We can see the `temperature`, `pressure` in `hPa` and `altitude` measurements. However, this time, the altitude has been calculated using the actual `sea level pressure`. We have also calculated the pressure in `mmHg`. 
 
