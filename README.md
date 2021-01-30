@@ -1,62 +1,27 @@
-### 
-This repository contains the steps I took to connect the bpm280 temperature and barometric pressure sensor to the raspberryPi.  
+### Measure barometric pressure, temperature and altitude with a RaspberryPi
 
-- RaspberryP 3 Model B+ with latest Raspbian isntalled
+Connect a BMP280 temperature and barometric pressure sensor to your RaspberryPi. This tutorial will go through the necessary steps to wire up the sensor and program your RaspberryPi to show meaningfull measurements from the BMP280 sensor.
+
+- [Components](#components)
+- [Wiring to RaspberryPi](#wiring)
+- [Detect sensor](#detect-sensor)
+- [Reading sensor data with Python](#reading-sensor-data-with-python)
+- [Calibrating altitude calculations using weather data](#calibrating-altitude-calculations-using-weather-data)
+
+If you have any questions, comments or suggestions, please make sure to contact me. 
+
+### Components
+
+- RaspberryP 3 Model B+ with latest Raspbian installed
 - [Adafruit bmp280](https://www.adafruit.com/product/2651) temperature and barometric pressure sensor
 - 4 GPIO [jumper wires](https://www.kiwi-electronics.nl/jumperwires-10-stuks-15-cm-femafe-female?search=gpio%20kabels&description=true) female to female
 
-It is a common practice to use a breadboard for connecting sensors to the RaspberryPi. In that case the GPIO jumper wires should be female to male
-  
+It is a common practice to use a breadboard for connecting sensors to the RaspberryPi. In my set up I connected the sensor directly to the RaspberryPi. If you intend to use a breaboard, you will need female to male jumper wires. 
 
-#### Set up 
------------
-Make sure the I2C bus is enabled on your RaspberryPi. This is a standard used for connectign multiple sensors or devices to the RaspberryPi. If you haven't configured I2C, then make sure to go through this [walk through](https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c)
+### Wiring
+The sensor can be wired to the RaspberryPi both with I2C and SPI. In this tutorial we will use the I2C standard. We will need to connect the power supply (3V3), ground (GND) and the I2C (SCL & SDA) pins.
 
-enable I2C
-
-Before st
-`run sudo raspi-config` 
-
-
-Check if the sensor has been detected
-
-`sudo i2cdetect -y 1` 
-
-The output should similar to the one below
-[]
-
-`put overview of output here`
-
-If the overview only shows zero's, then your raspberrypi did not detect the sensor. Check whether jumper wires have been installed correctly. 
-
-
-1. enable I2C (https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2c)
-I installed latest version of raspbian. Required libraries are already installed
-`sudo apt-get install -y python-smbus`
-`sudo apt-get install -y i2c-tools`
-
-Check if the I2C is enabled: 
-`ls /dev/i2c` 
-
-`/dev/i2c-0`
-
-2. Installing Kernel Support (with Raspi-Config) / enable the i2c controlers
-
-
-select interface optoins --> I2C --> enable I2C interface (yes) reboot system, verify acitivation by ls /dev/i2c*, the files should be listed
-
-
-install python libraries:
-
-run sudo pip3 install adafruit-circuitpython-bmp280
-
- Connect BMP280 according to layout
- pip3 install board
-
-## Wiring
-The sensor can be wired with the I2C standard for communications and data transfer. This means that we need to connect the sensor to the I2C (SCL and SDA) pins of the RaspberryPi, the power supply and the ground. 
-
-The image below shows the [wiring](https://learn.adafruit.com/adafruit-bmp280-barometric-pressure-plus-temperature-sensor-breakout/circuitpython-test) of the sensor. For a more in depth explanation of the pins, visit the official [pinout documentation](https://learn.adafruit.com/adafruit-bmp280-barometric-pressure-plus-temperature-sensor-breakout/pinouts).
+The image below shows the [wiring](https://learn.adafruit.com/adafruit-bmp280-barometric-pressure-plus-temperature-sensor-breakout/circuitpython-test) of the sensor. For a more in depth explanation of the pins, visit the official [pinout documentation](https://learn.adafruit.com/adafruit-bmp280-barometric-pressure-plus-temperature-sensor-breakout/pinouts) of the sensor.
 
 - RaspberryPi 3V3 to VIN on sensor
 - RaspberryPi GND to GND on sensor
@@ -65,31 +30,30 @@ The image below shows the [wiring](https://learn.adafruit.com/adafruit-bmp280-ba
 
 <img src="https://cdn-learn.adafruit.com/assets/assets/000/058/619/original/adafruit_products_raspi_bmp280_i2c_bb.png?1533324749" alt="drawing" width="450"/>
 
-The pins on the sensor have been labelled on the board. The pins on the RaspberryPi can be found using a pinout chart as shown below. See this [interactive resource](https://pinout.xyz/) for an extensive guide. 
+The pins on the sensor have been labelled on the board itself. The pins on the RaspberryPi can be found using a pinout chart as shown below. See this [interactive resource](https://pinout.xyz/) for an extensive guide. 
 
 <img src="https://www.raspberrypi.org/documentation/usage/gpio/images/GPIO-Pinout-Diagram-2.png">
 
 
-## Checking the sensor
-If you have wired the sensor, you can check whether the RaspberryPi has detected it. 
+### Detect sensor
+Once you have wired the sensor, we need to make sure the RaspberryPi has actually detected it. Otherwise our Python code will throw an error. To check if the device has been detected, we can use:
 
 `sudo i2cdetect -y 1` 
 
-This will give an overview of all the sensors that have been detected. If you have wired the sensor succesfully, you will see an output similar to the one below
+This will return a matrix with all the ports and devices that have been detected. One of the reasons why I2C is a popular standard, is that it supports multiple devices on the same pins. The RaspberryPi will automatically assign each device to a different port. This can also be seen in this matrix. 
 
 <img src="https://github.com/codehub-rony/raspberrypi_bmp280/blob/master/images/i2c_detect.PNG">
 
+We can see that the sensor has been detected on port 77. Continue to the next section of this tutorial if you can see your sensor on any of the ports.
 
+If your sensor hasn't been detected; double check the wiring. Also, make sure to check your I2C has been enabled and configured properly. Adafruit has a nice [tutorial](https://learn.adafruit.com/adafruits-raspberry-pi-lesson-4-gpio-setup/configuring-i2) on how to set up the I2C. 
 
-## Reading sensor data
+### Reading sensor data with Python
+Install the python library with `pipenv` for reading out the sensor measurements
 
-Install the python library for reading out the sensor
+`pipenv install adafruit-circuitpython-bmp280` 
 
-`pip3 install adafruit-circuitpython-bmp280` 
-
-
-
-### Calibrating altitude calculations using a weather station
+#### Calibrating altitude calculations using weather data
 The altitude calculations provided by the sensor need to be calibrated, otherwise the altitude will be incorrect in time. These calculations are made based on the measured barometric pressure by the sensor, measured temperature and the Mean Sea Level Pressure (MSLP) at the location of the sensor. The MSLP is the local pressure adjusted for the sea level and is typically the pressure that is shown in the weather reports online. We can calibrate the sensor by looking up de MSLP at our location in the weather and setting the calibration variable to that pressure:
 
 `sensor.sea_level_pressure = 1012.2` 
